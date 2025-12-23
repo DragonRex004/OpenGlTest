@@ -1,7 +1,7 @@
 package de.dragonrex.new_engine.example;
 
 import de.dragonrex.new_engine.camera.Camera3D;
-import org.joml.Vector3f;
+import de.dragonrex.new_engine.input.Input;
 import org.lwjgl.glfw.GLFW;
 
 public class CameraController3D {
@@ -15,19 +15,19 @@ public class CameraController3D {
     }
 
     public void update(float deltaTime) {
-        float speed = 2f * deltaTime;
+        float speed = 3f * deltaTime;
 
-        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-            camera.move(new Vector3f(0f, 0f, -speed));
+        if (Input.isKeyPressed(GLFW.GLFW_KEY_W)) {
+            camera.moveForward(speed);
         }
-        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
-            camera.move(new Vector3f(0f, 0f, speed));
+        if (Input.isKeyPressed(GLFW.GLFW_KEY_S)) {
+            camera.moveBackward(speed);
         }
-        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
-            camera.move(new Vector3f(-speed, 0f, 0f));
+        if (Input.isKeyPressed(GLFW.GLFW_KEY_A)) {
+            camera.moveLeft(speed);
         }
-        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-            camera.move(new Vector3f(speed, 0f, 0f));
+        if (Input.isKeyPressed(GLFW.GLFW_KEY_D)) {
+            camera.moveRight(speed);
         }
     }
 }

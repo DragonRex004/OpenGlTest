@@ -2,6 +2,8 @@ package de.dragonrex.new_engine.engine;
 
 import de.dragonrex.new_engine.camera.Camera2D;
 import de.dragonrex.new_engine.camera.Camera3D;
+import de.dragonrex.new_engine.input.Input;
+import de.dragonrex.new_engine.input.Mouse;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -41,9 +43,6 @@ public abstract class Engine {
         cleanup();
     }
 
-    /**
-     * GLFW Fenster und Kontext initialisieren
-     */
     private void initGLFW() {
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -58,30 +57,23 @@ public abstract class Engine {
             throw new RuntimeException("Failed to create GLFW window");
 
         GLFW.glfwMakeContextCurrent(window);
+        Input.setup(window);
+        Mouse.init(window);
         GLFW.glfwSwapInterval(1); // VSync
         GLFW.glfwShowWindow(window);
     }
 
-    /**
-     * OpenGL Kontext initialisieren
-     */
     private void initOpenGL() {
         GL.createCapabilities();
         GL11.glClearColor(0f, 0f, 0f, 1f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
-    /**
-     * Kameras initialisieren
-     */
     private void initCameras() {
         camera2D = new Camera2D(width, height);
         camera3D = new Camera3D((float)Math.toRadians(70f), (float)width/height, 0.01f, 100f);
     }
 
-    /**
-     * GameLoop
-     */
     private void loop() {
         while (!GLFW.glfwWindowShouldClose(window)) {
             double currentTime = GLFW.glfwGetTime();
@@ -98,42 +90,18 @@ public abstract class Engine {
         }
     }
 
-    /**
-     * Cleanup beim Beenden
-     */
     private void cleanup() {
-        cleanupGame(); // Spiel-spezifische Ressourcen
+        cleanupGame();
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
         GLFW.glfwSetErrorCallback(null).free();
     }
 
-    // ==========================
-    // Abstrakte Methoden für das Spiel
-    // ==========================
-    /**
-     * Initialisierung des Spiels (Meshes, Shader, GameObjects)
-     */
     protected abstract void initGame();
-
-    /**
-     * Update Logik
-     */
     protected abstract void update(float deltaTime);
-
-    /**
-     * Rendern aller Objekte
-     */
     protected abstract void render();
-
-    /**
-     * Cleanup der Spiel-spezifischen Ressourcen
-     */
     protected abstract void cleanupGame();
 
-    // ==========================
-    // Getter für Kameras
-    // ==========================
     public Camera2D getCamera2D() { return camera2D; }
     public Camera3D getCamera3D() { return camera3D; }
     public long getWindow() { return window; }

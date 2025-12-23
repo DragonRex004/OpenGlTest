@@ -9,10 +9,12 @@ import de.dragonrex.new_engine.example.objects.CubeVertices;
 import de.dragonrex.new_engine.example.objects.Triangle2D;
 import de.dragonrex.new_engine.shader.Mesh;
 import de.dragonrex.new_engine.shader.Shader;
+import org.lwjgl.glfw.GLFW;
 
 public class ExampleGame extends Engine {
 
     private CameraController3D controller;
+    private MouseCameraController mouseCam;
     private Shader shader;
     private Mesh cubeMesh;
     private Mesh triangleMesh;
@@ -24,6 +26,8 @@ public class ExampleGame extends Engine {
     @Override
     protected void initGame() {
         controller = new CameraController3D(camera3D, window);
+        mouseCam = new MouseCameraController(camera3D);
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
         shader = new Shader("vertex.glsl", "fragment.glsl");
 
         // 3D Cube
@@ -38,13 +42,14 @@ public class ExampleGame extends Engine {
                 -50f, -50f, 0f, 0f, 0f, 1f
         };
         triangleMesh = new Mesh(triangleVertices);
-        Triangle2D triangle = new Triangle2D(400f, 300f, triangleMesh, shader);
+        Triangle2D triangle = new Triangle2D(600, 100f, triangleMesh, shader);
         GameObjectManager2D.add(triangle);
     }
 
     @Override
     protected void update(float deltaTime) {
         controller.update(deltaTime);
+        mouseCam.update();
         GameObjectManager3D.updateAll();
         GameObjectManager2D.updateAll();
     }
