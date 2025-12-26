@@ -22,12 +22,14 @@ public class UILabel extends UIElement {
 
     @Override
     public void render() {
+        /*
         UIRenderer.drawText(
                 text,
                 transform.x,
                 transform.y,
                 color
         );
+         */
     }
 
     public void setText(String text) {
